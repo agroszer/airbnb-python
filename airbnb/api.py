@@ -108,8 +108,14 @@ class Api(object):
 
         return r.json()
 
-    def get_calendar(self, listing_id, starting_month=datetime.datetime.now().month, starting_year=datetime.datetime.now().year, calendar_months=12):
+    def get_calendar(self, listing_id, starting_month=None, starting_year=None,
+                     calendar_months=12):
         assert(self._access_token)
+
+        if starting_month is None:
+            starting_month = datetime.datetime.now().month
+        if starting_year is None:
+            starting_year = datetime.datetime.now().year
 
         params = {
             'year': str(starting_year),
@@ -157,8 +163,12 @@ class Api(object):
 
         return r.json()
 
-    def get_listing_calendar(self, listing_id, starting_date=datetime.datetime.now(), calendar_months=6):
+    def get_listing_calendar(self, listing_id, starting_date=None,
+                             calendar_months=6):
         assert(self._access_token)
+
+        if starting_date is None:
+            starting_date = datetime.datetime.now()
 
         params = {
             '_format': 'host_calendar_detailed'
@@ -230,7 +240,6 @@ class Api(object):
         r.raise_for_status()
 
         return r.json()['reservation']
-
 
     def get_all_past_reservations(self):
         past_scheduled_plan_ids = self.get_travel_plans()['past_scheduled_plans']['metadata']['cache']['identifiers']
